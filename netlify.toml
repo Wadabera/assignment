@@ -3,9 +3,6 @@
   functions = "functions"
   publish = "public"
 
-[functions]
-  included_files = ["views/**"]
-
 [[plugins]]
   package = "@netlify/plugin-functions-install-core"
 
