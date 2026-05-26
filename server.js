@@ -10,12 +10,17 @@ const PORT = process.env.PORT || 3000;
 // Find views and public directories - try multiple possible locations in Netlify Lambda
 const findViewsPath = () => {
   const candidates = [
-    __dirname,                              // /var/task (current directory)
-    path.join(__dirname, '..'),            // /var/task (parent)
-    '/var/task',                          // explicit /var/task
-    '/var/task/functions',                // if running from functions subdir
-    process.env.LAMBDA_TASK_ROOT || '',   // env variable
+    __dirname,                                    // current directory (likely /var/task)
+    path.join(__dirname, '..'),                  // parent (likely /var)
+    '/var/task',                                 // explicit /var/task
+    '/var/task/functions',                     // if in functions subdir
   ];
+  
+  // Add LAMBDA_TASK_ROOT if it exists and doesn't contain 'views'
+  const taskRoot = process.env.LAMBDA_TASK_ROOT;
+  if (taskRoot && taskRoot !== '/var') {
+    candidates.push(taskRoot);
+  }
   
   for (const candidate of candidates) {
     const viewsPath = path.join(candidate, 'views');
@@ -34,14 +39,6 @@ const root = findViewsPath();
 
 console.log('Final root:', root);
 console.log('Views path:', path.join(root, 'views'));
-
-// Middleware
-app.use(express.static(path.join(root, 'public')));
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(expressLayouts);
-app.set('views', path.join(root, 'views'));
-app.set('layout', 'layouts/main');
-app.set('view engine', 'ejs');
 
 // Routes
 app.get('/', (req, res) => {
