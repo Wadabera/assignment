@@ -4,8 +4,7 @@
   publish = "public"
 
 [functions]
-  included_files = ["views/**"]
-  node_bundler = "zip"
+  included_files = ["views/**", "node_modules/**"]
 
 [[redirects]]
   from = "/*"

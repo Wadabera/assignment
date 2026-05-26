@@ -6,11 +6,23 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Resolve paths correctly in both local and Netlify Lambda environments
+const getProjectRoot = () => {
+  // In Netlify Lambda, __dirname is /var/task/functions
+  // We need to go up one level to reach views and public
+  if (process.env.AWS_LAMBDA_FUNCTION_NAME || process.env.LAMBDA_TASK_ROOT) {
+    return path.join(__dirname, '..');
+  }
+  return __dirname;
+};
+
+const root = getProjectRoot();
+
 // Middleware
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(root, 'public')));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(expressLayouts);
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(root, 'views'));
 app.set('layout', 'layouts/main');
 app.set('view engine', 'ejs');
 
