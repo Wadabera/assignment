@@ -16,8 +16,5 @@
     "express": "^5.2.1",
     "express-ejs-layouts": "^2.5.1",
     "serverless-http": "^4.0.0"
-  },
-  "devDependencies": {
-    "@netlify/plugin-functions-install-core": "^0.5.0"
   }
 }
