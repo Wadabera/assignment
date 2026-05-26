@@ -1,0 +1,19 @@
+<section id="search-results">
+    <h1>Search Results</h1>
+    <p>You searched for: <strong>"<%= query %>"</strong></p>
+    
+    <div style="margin-top: 2rem; padding: 2rem; background: #fff; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.05);">
+        <% if (query !== 'Nothing') { %>
+            <p>We found some matching items for your query. In a real application, these would be fetched from a database.</p>
+            <ul style="margin-top: 1rem; list-style-position: inside;">
+                <li>Result related to <%= query %> 1</li>
+                <li>Result related to <%= query %> 2</li>
+                <li>Result related to <%= query %> 3</li>
+            </ul>
+        <% } else { %>
+            <p>Please enter a search term in the header to see results.</p>
+        <% } %>
+    </div>
+
+    <a href="/" class="btn" style="display: inline-block; width: auto; margin-top: 2rem;">Return Home</a>
+</section>
