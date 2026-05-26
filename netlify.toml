@@ -6,6 +6,9 @@
 [functions]
   included_files = ["views/**"]
 
+[[plugins]]
+  package = "@netlify/plugin-functions-install-core"
+
 [[redirects]]
   from = "/*"
   to = "/.netlify/functions/api"
