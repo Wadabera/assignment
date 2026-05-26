@@ -13,12 +13,12 @@ const findViewsPath = () => {
     __dirname,                                    // current directory (likely /var/task)
     path.join(__dirname, '..'),                  // parent (likely /var)
     '/var/task',                                 // explicit /var/task
-    '/var/task/functions',                     // if in functions subdir
+    '/var/task/functions',                       // if in functions subdir
   ];
   
-  // Add LAMBDA_TASK_ROOT if it exists and doesn't contain 'views'
+  // Add LAMBDA_TASK_ROOT if it exists and doesn't point to wrong path
   const taskRoot = process.env.LAMBDA_TASK_ROOT;
-  if (taskRoot && taskRoot !== '/var') {
+  if (taskRoot && !taskRoot.endsWith('/views') && !taskRoot.endsWith('/public')) {
     candidates.push(taskRoot);
   }
   
@@ -40,7 +40,13 @@ const root = findViewsPath();
 console.log('Final root:', root);
 console.log('Views path:', path.join(root, 'views'));
 
-// Routes
+// Middleware
+app.use(express.static(path.join(root, 'public')));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(expressLayouts);
+app.set('views', path.join(root, 'views'));
+app.set('layout', 'layouts/main');
+app.set('view engine', 'ejs');
 app.get('/', (req, res) => {
     res.render('index', { title: 'Home - Mini Website', active: 'home' });
 });
