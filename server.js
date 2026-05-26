@@ -6,24 +6,13 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Resolve paths correctly in both local and Netlify Lambda environments
-// In Netlify Lambda, files are placed at /var/task/ (LAMBDA_TASK_ROOT)
-// __dirname will be /var/task/functions (where api.js resides)
-const getProjectRoot = () => {
-  // LAMBDA_TASK_ROOT is the standard Netlify environment variable for Lambda
-  // It points to /var/task where all files are placed
-  if (process.env.LAMBDA_TASK_ROOT) {
-    return process.env.LAMBDA_TASK_ROOT;
-  }
-  return __dirname;
-};
+// In Netlify Lambda with zip bundler, all included files are placed at /var/task/
+// server.js is placed at /var/task/server.js, so __dirname = /var/task
+// views and public are also at /var/task/
+const root = __dirname;
 
-const root = getProjectRoot();
-
-// Debug logging (remove after confirming it works)
+// Debug logging
 console.log('__dirname:', __dirname);
-console.log('LAMBDA_TASK_ROOT:', process.env.LAMBDA_TASK_ROOT);
-console.log('Resolved root:', root);
 console.log('Views path:', path.join(root, 'views'));
 
 // Middleware
