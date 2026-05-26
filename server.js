@@ -6,11 +6,14 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Get project root (works for both local and Netlify Functions)
+const root = process.env.LAMBDA_TASK_ROOT ? path.join(process.env.LAMBDA_TASK_ROOT, '..') : __dirname;
+
 // Middleware
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(root, 'public')));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(expressLayouts);
-app.set('views', path.join(__dirname, 'views')); // Explicitly set views path
+app.set('views', path.join(root, 'views')); // Explicitly set views path
 app.set('layout', 'layouts/main');
 app.set('view engine', 'ejs');
 
