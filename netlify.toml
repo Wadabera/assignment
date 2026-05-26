@@ -5,9 +5,7 @@
 
 [functions]
   included_files = ["views/**"]
-
-[[plugins]]
-  package = "@netlify/plugin-functions-install-core"
+  node_bundler = "zip"
 
 [[redirects]]
   from = "/*"
