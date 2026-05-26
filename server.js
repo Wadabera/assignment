@@ -2,17 +2,37 @@ const express = require('express');
 const expressLayouts = require('express-ejs-layouts');
 const bodyParser = require('body-parser');
 const path = require('path');
+const fs = require('fs');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// In Netlify Lambda with zip bundler, all included files are placed at /var/task/
-// server.js is placed at /var/task/server.js, so __dirname = /var/task
-// views and public are also at /var/task/
-const root = __dirname;
+// Find views and public directories - try multiple possible locations in Netlify Lambda
+const findViewsPath = () => {
+  const candidates = [
+    __dirname,                              // /var/task (current directory)
+    path.join(__dirname, '..'),            // /var/task (parent)
+    '/var/task',                          // explicit /var/task
+    '/var/task/functions',                // if running from functions subdir
+    process.env.LAMBDA_TASK_ROOT || '',   // env variable
+  ];
+  
+  for (const candidate of candidates) {
+    const viewsPath = path.join(candidate, 'views');
+    console.log('Checking views path:', viewsPath);
+    if (fs.existsSync(viewsPath)) {
+      console.log('Found views at:', viewsPath);
+      return candidate;
+    }
+  }
+  // Default to __dirname if not found
+  console.log('Views not found, using default:', __dirname);
+  return __dirname;
+};
 
-// Debug logging
-console.log('__dirname:', __dirname);
+const root = findViewsPath();
+
+console.log('Final root:', root);
 console.log('Views path:', path.join(root, 'views'));
 
 // Middleware
